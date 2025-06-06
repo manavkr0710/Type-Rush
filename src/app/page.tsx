@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-//import TypingTest from '@/components/TypingTest';
-//import { MultiplayerGame } from '../components/MultiplayerGame';
+import TypingTest from '@/components/TypingTest';
+import { MultiplayerGame } from '@/components/MultiplayerGame';
 
 type GameMode = 'classic' | 'dynamic' | 'ai' | 'multiplayer';
 
