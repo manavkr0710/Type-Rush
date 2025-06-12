@@ -32,9 +32,7 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [error, setError] = useState('');
   const gameDataRef = useRef<GameData | null>(null);
-  // Particle parallax state
-
-  // Initialize game data in localStorage if it doesn't exist
+  
   useEffect(() => {
     if (!localStorage.getItem('multiplayerGames')) {
       localStorage.setItem('multiplayerGames', JSON.stringify({}));
@@ -64,12 +62,11 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
       isStarted: false,
       text: generateTypingText({
         type: 'sentences',
-        length: 500,  // Increased from 100 to 500 characters
+        length: 500,  
         useSentences: true
       })
     };
 
-    // Store game data in localStorage
     const games = JSON.parse(localStorage.getItem('multiplayerGames') || '{}');
     games[newGameId] = newGameData;
     localStorage.setItem('multiplayerGames', JSON.stringify(games));
@@ -91,7 +88,6 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
       return;
     }
 
-    // Get games from localStorage
     const games = JSON.parse(localStorage.getItem('multiplayerGames') || '{}');
     const game = games[gameId];
 
@@ -115,7 +111,6 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
       return;
     }
 
-    // Add player to game
     game.players[playerName] = {
       name: playerName,
       isReady: false,
@@ -125,7 +120,6 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
       isFinished: false
     };
 
-    // Update game in localStorage
     games[gameId] = game;
     localStorage.setItem('multiplayerGames', JSON.stringify(games));
 
@@ -196,11 +190,9 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
     const games = JSON.parse(localStorage.getItem('multiplayerGames') || '{}');
     delete games[gameId];
     localStorage.setItem('multiplayerGames', JSON.stringify(games));
-    // Reset game state
     setGameData(null);
     setGameId('');
     setPlayerName('');
-    // Return to menu
     onBack();
   };
 
@@ -210,9 +202,7 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
     
     if (game) {
       game.restartPending = true;
-      // Reset host's restart status
       game.players[playerName].restartRequested = true;
-      // Generate new text for the next round
       game.text = generateTypingText({
         type: 'sentences',
         length: 500,
@@ -232,11 +222,9 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
     if (game) {
       game.players[playerName].restartRequested = true;
       
-      // Check if all players have accepted
       const allAccepted = Object.values(game.players).every(player => player.restartRequested);
       
       if (allAccepted) {
-        // Reset all players' states
         Object.keys(game.players).forEach(playerName => {
           game.players[playerName] = {
             ...game.players[playerName],
@@ -265,14 +253,13 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
       player => player.isReady
     );
 
-    // Copy Game ID to clipboard
     const handleCopyGameId = () => {
       navigator.clipboard.writeText(gameId);
     };
     
     return (
       <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#23243a] via-[#1a1b2f] to-[#23243a]">
-        {/* Static particles background */}
+        {}
         <div className="absolute inset-0 z-0 pointer-events-none">
           {Array.from({ length: 30 }).map((_, i) => (
             <div
@@ -392,7 +379,6 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
     );
   };
 
-  // Add polling for game state updates
   useEffect(() => {
     if (!gameId || !gameData) return;
 
@@ -401,11 +387,10 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
       const game = games[gameId];
       
       if (game) {
-        // Always update the game data to ensure real-time updates
         setGameData(game);
         gameDataRef.current = game;
       }
-    }, 50); // Poll every 50ms for more real-time updates
+    }, 50); 
 
     return () => clearInterval(pollInterval);
   }, [gameId, gameData]);
