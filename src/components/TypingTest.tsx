@@ -506,12 +506,11 @@ const TypingTest: React.FC<TypingTestProps> = ({
             </div>
 
             <input
-              type="text"
-              value={userInput}
+              type="text"              value={userInput}
               onChange={handleInput}
               className="w-full p-4 text-lg bg-white/5 border-2 border-white/20 rounded-lg focus:outline-none focus:border-blue-500/50 text-white placeholder-gray-400"
-              placeholder={gameData.players[playerName]?.isFinished ? "You've completed the test!" : "Start typing..."}
-              disabled={gameData.players[playerName]?.isFinished}
+              placeholder={gameData?.players && playerName ? gameData.players[playerName]?.isFinished ? "You've completed the test!" : "Start typing..." : "Start typing..."}
+              disabled={gameData?.players && playerName ? gameData.players[playerName]?.isFinished : false}
               autoFocus
             />
           </div>
