@@ -216,13 +216,12 @@ export const MultiplayerGame: React.FC<MultiplayerGameProps> = ({ onBack }) => {
   };
 
   const acceptRestart = () => {
-    const games = JSON.parse(localStorage.getItem('multiplayerGames') || '{}');
-    const game = games[gameId];
+    const games = JSON.parse(localStorage.getItem('multiplayerGames') || '{}');    const game = games[gameId];
     
     if (game) {
       game.players[playerName].restartRequested = true;
       
-      const allAccepted = Object.values(game.players).every(player => player.restartRequested);
+      const allAccepted = Object.values(game.players).every(player => (player as any).restartRequested);
       
       if (allAccepted) {
         Object.keys(game.players).forEach(playerName => {
