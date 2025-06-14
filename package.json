@@ -5,8 +5,13 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "npm run build",
     "lint": "next lint"
+  },
+  "engines": {
+    "node": ">=18.x",
+    "npm": ">=9.x"
   },
   "dependencies": {
     "react": "^19.0.0",
