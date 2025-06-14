@@ -1,4 +1,4 @@
-# Typing Master
+# Type Rush
 ![MainMenuTypeRush](https://github.com/user-attachments/assets/d7f7e3cf-b2c4-4676-8ebc-992261107683)
 
 A typing game application built with Next.js, React and TypeScript, and TailwindCSS.
