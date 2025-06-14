@@ -7,7 +7,8 @@ A typing game application built with Next.js, React and TypeScript, and Tailwind
 ![QuickPracticeTypeRush](https://github.com/user-attachments/assets/bea72468-ab16-4f15-8253-3cc23124d0e6)
 ![ClassicModeTypeRush](https://github.com/user-attachments/assets/dbf8f55a-7d27-4013-91ac-5b915080d68d)
 ![dynamicmodetyperush](https://github.com/user-attachments/assets/2f660121-1b71-46bb-b5ed-20af856b91e1)
-![AIRivalModeTypeRush](https://github.com/user-attachments/assets/d4d4fd64-c831-40f4-99f5-01eeb6782639)
+![AIRivalModeTypeRush](https://github.com/user-attachments/assets/907473a8-3449-4b31-838c-7438704b515a)
+
 ![waitingroomtyperush](https://github.com/user-attachments/assets/3c786a5c-a659-4b39-9fb2-a37c3c11019d)
 
 
