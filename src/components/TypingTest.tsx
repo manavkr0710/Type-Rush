@@ -3,14 +3,11 @@ import { AITypingSimulator } from '@/utils/aiTyping';
 import { generateTypingText } from '@/utils/wordLists';
 
 interface TypingTestProps {
-  gameMode: 'classic' | 'dynamic' | 'ai' | 'multiplayer';
+  gameMode: 'classic' | 'dynamic' | 'ai';
   timeLimit: number;
   onComplete: (stats: TypingStats) => void;
   onBack: () => void;
   text?: string;
-  gameData?: any;
-  playerName?: string;
-  updatePlayerProgress?: (progress: number, wpm: number, accuracy: number) => void;
 }
 
 interface TypingStats {
@@ -30,10 +27,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
   timeLimit, 
   onComplete, 
   onBack,
-  text: initialText,
-  gameData,
-  playerName,
-  updatePlayerProgress
+  text: initialText
 }) => {
   const [text, setText] = useState<string>(initialText || '');
   const [userInput, setUserInput] = useState<string>('');
@@ -49,9 +43,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
   const [aiSimulator, setAiSimulator] = useState(() => new AITypingSimulator({ personality: 'balanced' }));
   const [currentWPM, setCurrentWPM] = useState<number>(0);
   const [accuracy, setAccuracy] = useState<number>(100);
-  const textContainerRef = useRef<HTMLDivElement>(null);
-  const [typedText, setTypedText] = useState<string>('');
-  const [currentGameData, setCurrentGameData] = useState<any>(null);
+  const textContainerRef = useRef<HTMLDivElement>(null);  const [typedText, setTypedText] = useState<string>('');
   
   // Dynamic speed mode states
   const [textSpeed, setTextSpeed] = useState<number>(3.0); // Start at 3x speed
@@ -75,19 +67,13 @@ const TypingTest: React.FC<TypingTestProps> = ({
   const startTimeRef = useRef<number | null>(null);
   const timerUpdateRef = useRef<number | null>(null);
   const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
   // Generate initial text
   useEffect(() => {
-    let newText = '';
-    if (gameMode === 'multiplayer' && initialText) {
-      newText = initialText;
-    } else {
-      newText = generateTypingText({
-        type: textType,
-        length: 200,
-        useSentences
-      });
-    }
+    let newText = generateTypingText({
+      type: textType,
+      length: 200,
+      useSentences
+    });
     setText(newText);
     
     // Initialize visible text for dynamic speed mode
@@ -280,7 +266,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
           }
         }, 100);
       }
-      // No timer for multiplayer mode
+
     } else if ((gameMode !== 'classic' && gameMode !== 'ai' && gameMode !== 'dynamic' && remainingTime === 0) || isTestComplete) {
       // Only calculate stats if not already done in handleInput
       if (!isTestComplete) {
@@ -462,161 +448,6 @@ const TypingTest: React.FC<TypingTestProps> = ({
     }
   };
 
-  const renderMultiplayerGame = () => {
-    if (!gameData) return null;
-    return (
-      <div className="flex w-full gap-4">
-        {/* Current player's side */}
-        <div className="flex-1 p-6 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg">
-          <div className="mb-4">
-            <h3 className="text-xl font-bold text-white">{playerName}</h3>
-            <div className="text-sm text-gray-300">
-              Accuracy: {accuracy}%
-            </div>
-          </div>
-          
-          <div className="relative mb-4">
-            <div 
-              className="font-mono text-lg whitespace-pre-wrap break-all max-h-[200px] overflow-y-auto mb-4"
-              style={{ scrollBehavior: 'smooth' }}
-              ref={textContainerRef}
-            >
-              {text.split('').map((char, index) => {
-                const isCurrent = index === currentIndex;
-                const isTyped = index < currentIndex;
-                const isCorrect = typedText[index] === char;
-                
-                return (
-                  <span
-                    key={index}
-                    className={`${
-                      isCurrent ? 'bg-blue-200 rounded' : ''
-                    } ${
-                      isTyped
-                        ? isCorrect
-                          ? 'text-green-400'
-                          : 'text-red-400'
-                        : 'text-gray-300'
-                    }`}
-                  >
-                    {char}
-                  </span>
-                );
-              })}
-            </div>
-
-            <input
-              type="text"              value={userInput}
-              onChange={handleInput}
-              className="w-full p-4 text-lg bg-white/5 border-2 border-white/20 rounded-lg focus:outline-none focus:border-blue-500/50 text-white placeholder-gray-400"
-              placeholder={gameData?.players && playerName ? gameData.players[playerName]?.isFinished ? "You've completed the test!" : "Start typing..." : "Start typing..."}
-              disabled={gameData?.players && playerName ? gameData.players[playerName]?.isFinished : false}
-              autoFocus
-            />
-          </div>
-
-          <div className="w-full bg-gray-700 rounded-full h-2.5 mb-2">
-            <div
-              className="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
-              style={{ width: `${(currentIndex / text.length) * 100}%` }}
-            />
-          </div>
-
-          {gameData.players[playerName]?.isFinished && (
-            <div className="mt-4 p-4 bg-green-500/20 rounded-lg text-center border border-green-500/30">
-              <h3 className="text-xl font-bold text-green-400">You've finished!</h3>
-              <p className="text-green-300">
-                Accuracy: {gameData.players[playerName].accuracy}%
-              </p>
-              <p className="text-green-300 mt-2">Waiting for other players to finish...</p>
-            </div>
-          )}
-        </div>
-
-        {/* Other players' side */}
-        <div className="flex-1 p-6 bg-white/10 backdrop-blur-lg rounded-lg shadow-lg">
-          {Object.entries(gameData.players)
-            .filter(([name]) => name !== playerName)
-            .map(([name, player]) => (
-              <div key={name} className="mb-6 last:mb-0">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-white">{name}</h3>
-                  <div className="text-sm text-gray-300">
-                    Accuracy: {player.accuracy}%
-                  </div>
-                </div>
-
-                <div className="relative mb-4">
-                  <div className="font-mono text-lg whitespace-pre-wrap break-all max-h-[200px] overflow-y-auto">
-                    {text.split('').map((char, index) => {
-                      const isTyped = index < (player.progress / 100) * text.length;
-                      const isCurrentChar = Math.floor((player.progress / 100) * text.length) === index;
-                      return (
-                        <span
-                          key={index}
-                          className={`${
-                            isCurrentChar ? 'bg-blue-500/30 rounded' : ''
-                          } ${
-                            isTyped ? 'text-green-400' : 'text-gray-500'
-                          }`}
-                        >
-                          {char}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="w-full bg-gray-700 rounded-full h-2.5 mb-2">
-                  <div
-                    className="bg-blue-500 h-2.5 rounded-full transition-all duration-300"
-                    style={{ width: `${player.progress}%` }}
-                  />
-                </div>
-
-                {player.isFinished && (
-                  <div className="mt-2 text-center">
-                    <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
-                      Finished! Accuracy: {player.accuracy}%
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
-        </div>
-      </div>
-    );
-  };
-
-  // Update the main render to use multiplayer view when in multiplayer mode
-  if (gameMode === 'multiplayer') {
-    return (
-      <div className="p-6">
-        <div className="mb-6 flex justify-between items-center">
-          <button
-            onClick={onBack}
-            className="py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-700"
-          >
-            Leave Game
-          </button>
-          <div className="w-[100px]" /> {/* Spacer for alignment */}
-        </div>
-        {renderMultiplayerGame()}
-      </div>
-    );
-  }
-
-  // Update progress for multiplayer mode
-  useEffect(() => {
-    if (gameMode === 'multiplayer' && updatePlayerProgress) {
-      const updateInterval = setInterval(() => {
-        const progress = (currentIndex / text.length) * 100;
-        updatePlayerProgress(progress, currentWPM, accuracy);
-      }, 50); // Update every 50ms
-
-      return () => clearInterval(updateInterval);
-    }
-  }, [gameMode, currentIndex, text, currentWPM, accuracy, updatePlayerProgress]);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -655,29 +486,25 @@ const TypingTest: React.FC<TypingTestProps> = ({
 
       {/* Main content */}
       <div className="relative z-10 max-w-2xl mx-auto p-6">
-        <div className="mb-8 text-center">
-          <h1 
+        <div className="mb-8 text-center">          <h1 
             className="text-4xl font-bold mb-4 text-white" 
             style={{ 
               fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
               textShadow: `0 0 10px ${
                 gameMode === 'classic' ? 'hsla(210, 70%, 60%, 0.7)' :
                 gameMode === 'dynamic' ? 'hsla(120, 70%, 60%, 0.7)' :
-                gameMode === 'ai' ? 'hsla(270, 70%, 60%, 0.7)' :
-                'hsla(330, 70%, 60%, 0.7)'
+                'hsla(270, 70%, 60%, 0.7)'
               }`
             }}
           >
             {gameMode === 'classic' ? 'Classic Mode' :
              gameMode === 'dynamic' ? 'Dynamic Speed Mode' :
-             gameMode === 'ai' ? 'AI Rival Mode' :
-             'Multiplayer Mode'}
+             'AI Rival Mode'}
           </h1>
           <p className="text-gray-300 text-lg mb-6" style={{ fontFamily: '"Comic Sans MS", "Comic Sans", cursive' }}>
             {gameMode === 'classic' ? 'Test your typing speed with a fixed time limit. Focus on accuracy and consistency. Each mistake will cost you a second to the timer. Try to finish with the quickest time!' :
              gameMode === 'dynamic' ? 'Challenge yourself with increasing speeds. The text moves faster as you type accurately. Change the text type to see how you perform with different types of text.' :
-             gameMode === 'ai' ? 'Compete against an AI that adapts to your skill level. Can you outpace the machine?' :
-             'Challenge your friends in real-time typing battles. Race to the finish line!'}
+             'Compete against an AI that adapts to your skill level. Can you outpace the machine?'}
           </p>
         </div>
 
@@ -863,8 +690,8 @@ const TypingTest: React.FC<TypingTestProps> = ({
           </div>
         )}
 
-        {/* Only show input field if not in multiplayer mode */}
-        {gameMode !== 'multiplayer' && (
+        {/* Input field */}
+        {(
           <input
             type="text"
             value={userInput}

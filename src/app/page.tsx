@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import TypingTest from '@/components/TypingTest';
-import { MultiplayerGame } from '@/components/MultiplayerGame';
 
-type GameMode = 'classic' | 'dynamic' | 'ai' | 'multiplayer';
+type GameMode = 'classic' | 'dynamic' | 'ai';
 
 interface TypingStats {
   wpm: number;
@@ -316,10 +315,6 @@ export default function Home() {
     setSelectedMode(null);
   };
 
-  if (selectedMode === 'multiplayer') {
-    return <MultiplayerGame onBack={handleBack} />;
-  }
-
   if (selectedMode) {
     return (
       <TypingTest
@@ -443,19 +438,6 @@ export default function Home() {
               >
                 <span className="text-xl font-semibold block mb-2">AI Rival Mode</span>
                 <p className="text-sm" style={{ color: `hsla(${colorCycle + 240}, 70%, 80%, 1)` }}>Compete against an AI that adapts to your skill level</p>
-              </button>
-              <button
-                onClick={() => handleModeSelect('multiplayer')}
-                className="flex-1 max-w-md p-6 backdrop-blur-lg border text-white rounded-lg hover:bg-pink-500/30 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1"
-                style={{ 
-                  fontFamily: '"Comic Sans MS", "Comic Sans", cursive',
-                  backgroundColor: `hsla(${colorCycle + 300}, 70%, 20%, 0.2)`,
-                  borderColor: `hsla(${colorCycle + 300}, 70%, 40%, 0.3)`,
-                  boxShadow: `0 0 15px hsla(${colorCycle + 300}, 70%, 30%, 0.2)`
-                }}
-              >
-                <span className="text-xl font-semibold block mb-2">Multiplayer Mode</span>
-                <p className="text-sm" style={{ color: `hsla(${colorCycle + 300}, 70%, 80%, 1)` }}>Challenge your friends in real-time typing battles</p>
               </button>
             </div>
             
