@@ -1,4 +1,5 @@
 # Type Rush
+![mainMenuTypeRush](https://github.com/user-attachments/assets/477d72b7-6eb1-46f0-97ac-23dc09682143)
 
 A typing game application built with Next.js, React and TypeScript, and TailwindCSS.
 
