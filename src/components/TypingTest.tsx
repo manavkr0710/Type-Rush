@@ -281,7 +281,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
         onComplete?.({
           wpm: Math.round(wpm),
           accuracy: Math.round(accuracy),
-          totalTime: (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : totalTime,
+          totalTime: totalTime,
           mistakes
         });
       }
@@ -382,7 +382,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
       onComplete?.({
         wpm: Math.round(wpm),
         accuracy: Math.round(accuracy),
-        totalTime: (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : totalTime,
+        totalTime: totalTime,
         mistakes: newMistakes
       });
     }
@@ -699,44 +699,8 @@ const TypingTest: React.FC<TypingTestProps> = ({
             disabled={isTestComplete || (gameMode !== 'ai' && remainingTime === 0)}
           />
         )}
-      
-        {isTestComplete && (
-          <div className="mt-4 p-6 backdrop-blur-lg bg-white/10 rounded-lg text-center border border-white/20">
+        {isTestComplete && (          <div className="mt-4 p-6 backdrop-blur-lg bg-white/10 rounded-lg text-center border border-white/20">
             <h3 className="text-2xl font-bold text-green-400 mb-4">Test Complete!</h3>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="p-4 bg-white/5 rounded-lg">
-                <div className="text-lg text-gray-300 mb-2">WPM</div>
-                <div className="text-3xl font-bold text-white">
-                  {gameMode === 'classic' ? Math.round((userInput.length / 5) / (elapsedTime / 60)) : 0}
-                </div>
-              </div>
-              <div className="p-4 bg-white/5 rounded-lg">
-                <div className="text-lg text-gray-300 mb-2">Accuracy</div>
-                <div className="text-3xl font-bold text-white">{accuracy}%</div>
-              </div>
-              <div className="p-4 bg-white/5 rounded-lg">
-                <div className="text-lg text-gray-300 mb-2">Mistakes</div>
-                <div className="text-3xl font-bold text-white">{mistakes}</div>
-              </div>
-              {gameMode === 'classic' && (
-                <div className="p-4 bg-white/5 rounded-lg">
-                  <div className="text-lg text-gray-300 mb-2">Time</div>
-                  <div className="text-3xl font-bold text-white">{elapsedTime.toFixed(1)}s</div>
-                </div>
-              )}
-              {gameMode === 'dynamic' && (
-                <div className="p-4 bg-white/5 rounded-lg">
-                  <div className="text-lg text-gray-300 mb-2">Max Speed</div>
-                  <div className="text-3xl font-bold text-blue-400">{textSpeed.toFixed(1)}x</div>
-                </div>
-              )}
-              {gameMode === 'ai' && (
-                <div className="p-4 bg-white/5 rounded-lg">
-                  <div className="text-lg text-gray-300 mb-2">AI Mistakes</div>
-                  <div className="text-3xl font-bold text-purple-400">{aiMistakes}</div>
-                </div>
-              )}
-            </div>
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => {
