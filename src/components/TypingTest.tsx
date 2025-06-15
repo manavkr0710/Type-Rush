@@ -271,16 +271,15 @@ const TypingTest: React.FC<TypingTestProps> = ({
       // Only calculate stats if not already done in handleInput
       if (!isTestComplete) {
         // Calculate stats
-        const endTime = Date.now();
-        const totalTime = gameMode === 'classic' 
+        const endTime = Date.now();        const totalTime = gameMode === 'classic' 
           ? elapsedTime 
           : (endTime - (startTimeRef.current || endTime)) / 1000;
         const words = userInput.length / 5;
-        const wpm = (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : (words / totalTime) * 60;
+        const wpm = (words / totalTime) * 60;
         const accuracy = ((userInput.length - mistakes) / userInput.length) * 100;
 
         onComplete?.({
-          wpm: (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : Math.round(wpm),
+          wpm: Math.round(wpm),
           accuracy: Math.round(accuracy),
           totalTime: (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : totalTime,
           mistakes
@@ -373,16 +372,15 @@ const TypingTest: React.FC<TypingTestProps> = ({
       setIsTestComplete(true);
       
       // Calculate stats immediately when test is complete
-      const endTime = Date.now();
-      const totalTime = gameMode === 'classic' 
+      const endTime = Date.now();      const totalTime = gameMode === 'classic' 
         ? elapsedTime 
         : (endTime - (startTimeRef.current || endTime)) / 1000;
       const words = input.length / 5;
-      const wpm = (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : (words / totalTime) * 60;
+      const wpm = (words / totalTime) * 60;
       const accuracy = ((input.length - newMistakes) / input.length) * 100;
 
       onComplete?.({
-        wpm: (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : Math.round(wpm),
+        wpm: Math.round(wpm),
         accuracy: Math.round(accuracy),
         totalTime: (gameMode === 'ai' || gameMode === 'dynamic') ? 0 : totalTime,
         mistakes: newMistakes
