@@ -1,5 +1,4 @@
 # Type Rush
-![MainMenuTypeRush](https://github.com/user-attachments/assets/d7f7e3cf-b2c4-4676-8ebc-992261107683)
 
 A typing game application built with Next.js, React and TypeScript, and TailwindCSS.
 
@@ -9,7 +8,6 @@ A typing game application built with Next.js, React and TypeScript, and Tailwind
 ![dynamicmodetyperush](https://github.com/user-attachments/assets/2f660121-1b71-46bb-b5ed-20af856b91e1)
 ![AIRivalModeTypeRush](https://github.com/user-attachments/assets/907473a8-3449-4b31-838c-7438704b515a)
 
-![waitingroomtyperush](https://github.com/user-attachments/assets/3c786a5c-a659-4b39-9fb2-a37c3c11019d)
 
 
 
